@@ -1,3 +1,13 @@
+/*
+Name: Rashi Anil Agrawal
+SJSU ID: 009337783
+CMPE 273 - Lab 2
+
+Lab Description:
+The purpose of this lab is to get familiar with the HTTP protocol in general, 
+as well as Node.js and their framework (Connect middleware). 
+Using Node.js and Connect, we will be building a simple cookie-based authentication application.
+*/
 
 /**
  * Login Class
@@ -12,7 +22,7 @@ function Login() {
  * Say Hello {name} to the user
  */
 Login.prototype.hello = function(sessionId) {
-	return 'Hello ' + this.sessionMap[sessionId].name + '\n';
+	return 'Hello ' + this.sessionMap[sessionId].name + ' , Your session id is:' + sessionId + '\n';
 };
 
 /**
@@ -41,11 +51,34 @@ Login.prototype.login = function(_name, _email) {
  * Logout from the server
  */ 
 Login.prototype.logout = function(sessionId) {
-	console.log('logout::' + sessionId);
+	console.log('Logout::' + sessionId);
    /*
 	* TODO: Remove the given sessionId from the sessionMap
 	*/
+	delete this.sessionMap[sessionId];
+	if(this.sessionMap[sessionId] == null) {
+		console.log("Logout successful");
+	}
+	else {
+		console.log("Logout unsuccessful");	
+	}
 };
+
+/*
+*  Renew the Session Id for logged in user. 
+*/
+Login.prototype.renew = function(sessionId) {
+	
+	var old_name = this.sessionMap[sessionId].name;
+	var old_email = this.sessionMap[sessionId].email;
+
+	delete this.sessionMap[sessionId];
+
+	var newSessionId = new Date().getTime();
+	this.sessionMap[newSessionId] = { name: old_name, email: old_email };
+
+	return newSessionId;
+}
 
 // Export the Login class
 module.exports = new Login();
